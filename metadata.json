@@ -1,0 +1,5 @@
+{
+  "name": "Product Photo AI Studio",
+  "description": "Upload product photos, provide enhancement prompts, and select aspect ratios to generate professional, e-commerce-ready images using AI. Transform multiple photos with multiple prompts simultaneously.",
+  "requestFramePermissions": []
+}
