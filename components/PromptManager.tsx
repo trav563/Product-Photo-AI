@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { XCircleIcon } from './icons/XCircleIcon';
+import { XCircleIcon } from './icons/XCircleIcon.tsx';
 
 interface PromptManagerProps {
   prompts: string[];

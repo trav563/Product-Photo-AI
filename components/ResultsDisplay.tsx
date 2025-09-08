@@ -1,7 +1,7 @@
 
 import React from 'react';
-import type { GeneratedImage, GenerationJob } from '../types';
-import { Spinner } from './Spinner';
+import type { GeneratedImage, GenerationJob } from '../types.ts';
+import { Spinner } from './Spinner.tsx';
 
 interface ResultsDisplayProps {
   jobs: GenerationJob[];

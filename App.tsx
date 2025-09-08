@@ -1,11 +1,11 @@
 
 import React, { useState, useCallback } from 'react';
-import { Header } from './components/Header';
-import { ImageUploader } from './components/ImageUploader';
-import { PromptManager } from './components/PromptManager';
-import { ResultsDisplay } from './components/ResultsDisplay';
-import { UploadedFile, GeneratedImage, GenerationJob } from './types';
-import { editImage } from './services/geminiService';
+import { Header } from './components/Header.tsx';
+import { ImageUploader } from './components/ImageUploader.tsx';
+import { PromptManager } from './components/PromptManager.tsx';
+import { ResultsDisplay } from './components/ResultsDisplay.tsx';
+import { UploadedFile, GeneratedImage, GenerationJob } from './types.ts';
+import { editImage } from './services/geminiService.ts';
 
 const App: React.FC = () => {
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);

@@ -1,7 +1,7 @@
 
 import React from 'react';
-import type { UploadedFile } from '../types';
-import { XCircleIcon } from './icons/XCircleIcon';
+import type { UploadedFile } from '../types.ts';
+import { XCircleIcon } from './icons/XCircleIcon.tsx';
 
 interface ImageUploaderProps {
   uploadedFiles: UploadedFile[];
