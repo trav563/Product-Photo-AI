@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback } from 'react';
 import { Header } from './components/Header';
 import { ImageUploader } from './components/ImageUploader';
@@ -6,8 +5,10 @@ import { PromptManager } from './components/PromptManager';
 import { ResultsDisplay } from './components/ResultsDisplay';
 import { UploadedFile, GeneratedImage, GenerationJob } from './types';
 import { editImage } from './services/geminiService';
+import { ApiKeyManager } from './components/ApiKeyManager';
 
 const App: React.FC = () => {
+  const [apiKey, setApiKey] = useState<string>('');
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
   const [prompts, setPrompts] = useState<string[]>(['Make the background pure white #FFFFFF', 'Place the product on a rustic wooden table']);
   const [generatedImages, setGeneratedImages] = useState<GeneratedImage[]>([]);
@@ -15,11 +16,11 @@ const App: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   const isGenerating = processingJobs.length > 0;
+  const isKeySet = !!apiKey;
 
-  // FIX: Removed aspectRatio from dependencies and logic as it's not supported for image editing.
   const handleGenerate = useCallback(async () => {
-    if (uploadedFiles.length === 0 || prompts.length === 0) {
-      setError("Please upload at least one image and add at least one prompt.");
+    if (uploadedFiles.length === 0 || prompts.length === 0 || !apiKey) {
+      setError("Please provide an API key, upload at least one image, and add at least one prompt.");
       return;
     }
     setError(null);
@@ -39,7 +40,7 @@ const App: React.FC = () => {
 
     const promises = uploadedFiles.flatMap(file =>
       prompts.map(prompt =>
-        editImage(file.file, prompt)
+        editImage(file.file, prompt, apiKey)
           .then(imageData => {
             if (imageData) {
               setGeneratedImages(prev => [
@@ -64,7 +65,7 @@ const App: React.FC = () => {
     
     await Promise.all(promises);
 
-  }, [uploadedFiles, prompts]);
+  }, [uploadedFiles, prompts, apiKey]);
 
   return (
     <div className="min-h-screen bg-gray-50 font-sans text-gray-800">
@@ -73,13 +74,16 @@ const App: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
           {/* Controls Column */}
           <div className="lg:col-span-1 bg-white p-6 rounded-2xl shadow-lg space-y-8 h-fit sticky top-8">
-            <ImageUploader uploadedFiles={uploadedFiles} setUploadedFiles={setUploadedFiles} />
-            <PromptManager prompts={prompts} setPrompts={setPrompts} />
-            {/* FIX: Removed AspectRatioSelector as it is not supported by the image editing model. */}
+            <ApiKeyManager apiKey={apiKey} setApiKey={setApiKey} />
+            
+            <div className={`space-y-8 ${!isKeySet ? 'opacity-50 pointer-events-none' : ''}`}>
+                <ImageUploader uploadedFiles={uploadedFiles} setUploadedFiles={setUploadedFiles} />
+                <PromptManager prompts={prompts} setPrompts={setPrompts} />
+            </div>
             
             <button
               onClick={handleGenerate}
-              disabled={isGenerating || uploadedFiles.length === 0 || prompts.length === 0}
+              disabled={isGenerating || uploadedFiles.length === 0 || prompts.length === 0 || !isKeySet}
               className="w-full bg-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center shadow-md hover:shadow-lg disabled:shadow-none"
             >
               {isGenerating ? (

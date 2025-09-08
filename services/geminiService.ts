@@ -1,4 +1,3 @@
-
 import { GoogleGenAI, Modality } from "@google/genai";
 
 const fileToBase64 = (file: File): Promise<string> => {
@@ -13,12 +12,11 @@ const fileToBase64 = (file: File): Promise<string> => {
   });
 };
 
-// FIX: Removed unsupported aspectRatio parameter. The image editing model does not support changing the aspect ratio.
-export const editImage = async (file: File, prompt: string): Promise<string | null> => {
-  if (!process.env.API_KEY) {
-    throw new Error("API_KEY environment variable is not set.");
+export const editImage = async (file: File, prompt: string, apiKey: string): Promise<string | null> => {
+  if (!apiKey) {
+    throw new Error("API key is not provided.");
   }
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  const ai = new GoogleGenAI({ apiKey });
   
   const base64Image = await fileToBase64(file);
 
